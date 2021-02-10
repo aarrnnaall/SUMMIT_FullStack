@@ -1,6 +1,3 @@
-/**
- * Created by xavi on 2/17/17.
- */
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
 import {StorageService} from "../services/storage.service";

@@ -3,9 +3,7 @@ import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import { Login } from "./login.model";
 
-/**
- * Created by xavi on 5/16/17.
- */
+
 @Injectable()
 export class AuthenticationService {
 
