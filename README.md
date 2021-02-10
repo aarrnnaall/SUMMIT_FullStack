@@ -1,9 +1,13 @@
 #Requirements:
-
+	
 	* sudo apt install python3
 	* sudo apt install python3-pip
 	* sudo apt install nodejs
 	* sudo apt install npm
+	* sudo snap install docker
+	* sudo snap install kubectl --classic
+	* curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+	* sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
 #Create Database:
 
@@ -35,6 +39,7 @@
 
 #Run Kubernetes BackEnd y FrondEnd:
 
+	* minikube start
 	* kubectl apply -f deployment.yaml
 	* kubectl get pods
 
