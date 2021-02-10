@@ -1,6 +1,8 @@
 Requirements:
 +sudo apt install python3
 +sudo apt install python3-pip
++sudo apt install nodejs
++sudo apt install npm
 Create Database:
 CREATE DATABASE `Summit`;
 user Summit;
@@ -14,6 +16,18 @@ PRIMARY KEY (`user_id`)
 Run Back-end:
 +pip3 install -r requirements.txt
 +python3 main.py
-Frond End:
+Run Frond End:
 +npm install
 +npm start
+Run Docker Back End:
++docker build -f Dockerfile -t backend_flask:latest .
++docker image ls
++docker run -p 5001:5000 backend_flask
+Run Docker Frond End:
++docker build -f Dockerfile -t frontend_angular:latest .
++docker image ls
++docker run -p 4201:4200 fontend_angular
+Run Kubernetes BackEnd y FrondEnd:
++kubectl apply -f deployment.yaml
++kubectl get pods
+(run the commands in pwd /Frond_End y pwd /Back_End)
