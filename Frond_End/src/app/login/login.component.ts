@@ -8,8 +8,7 @@ import {Login} from "./shared/login.model";
 import {AuthenticationService} from "./shared/authentication.service";
 import {StorageService} from "../core/services/storage.service";
 import {Router} from "@angular/router";
-import {Session} from "../core/models/session.model";
-import jwt_decode from 'jwt-decode';
+
 
 @Component({
   selector: 'login',
@@ -40,29 +39,18 @@ export class LoginComponent implements OnInit {
     this.error = null;
     if(this.loginForm.valid){
       this.authenticationService.login(new Login(this.loginForm.value)).subscribe(
-        data => this.correctLogin(data),
-        error => {
-          this.error = error;
-        }
+        data => this.correctLogin(data)
       )
     }
   }
-  
   private correctLogin(data: any){
-
-    try{
-    this.some=jwt_decode(data.jwt_token)
-    if(this.some.some ==="thissecret"){
-      this.storageService.isAuthenticated();   
-      this.router.navigate(['/home']);   
-    }else{
-      console.log("Token Incorrect")
+    if(data=='Incorrect password' ||data=='Incorrect user'){
       this.user=true;
+    }else{
+      this.user=false;
     }
-  }catch{
-  this.password=true;
-    console.log("User/Password incorrect")
-    this.user=true;
+    this.storageService.setCurrentSession(data);
+    this.router.navigate(['/home']);
   }
-  }
+
 }

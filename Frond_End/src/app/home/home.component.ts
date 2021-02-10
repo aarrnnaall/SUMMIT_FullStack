@@ -11,7 +11,6 @@ import {AuthenticationService} from "../login/shared/authentication.service";
 })
 
 export class HomeComponent implements OnInit {
-  public user: User;
 
   constructor(
     private storageService: StorageService,
@@ -19,13 +18,11 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.user = this.storageService.getCurrentUser();
+    
   }
 
   public logout(): void{
-    this.authenticationService.logout().subscribe(
-        response => {if(response) {this.storageService.logout();}}
-    );
+    this.storageService.logout();
   }
 
 }

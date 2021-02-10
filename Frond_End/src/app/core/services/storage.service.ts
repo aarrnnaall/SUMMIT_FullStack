@@ -1,34 +1,37 @@
-/**
- * Created by xavi on 5/16/17.
- */
 import {Injectable} from "@angular/core";
 import { Router } from '@angular/router';
-import {Session} from "../models/session.model";
-import {User} from "../models/user.model";
-
+import jwt_decode from 'jwt-decode';
 @Injectable()
 export class StorageService {
 
   private localStorageService;
-  private currentSession : Session = null;
-
+  private currentSession : any;
+  some: any=null;
+  token: any;
   constructor(private router: Router) {
     this.localStorageService = localStorage;
     this.currentSession = this.loadSessionData();
   }
 
-  setCurrentSession(session: Session): void {
-    this.currentSession = session;
-    this.localStorageService.setItem('currentUser', JSON.stringify(session));
+  setCurrentSession(session: any): void {
+    this.token=session;
+    try{
+      this.some=jwt_decode(this.token.jwt_token);
+      this.localStorageService.setItem('currentUser', JSON.stringify(session));
+    }
+    catch{
+      this.some=null;
+    }
   }
 
-  loadSessionData(): Session{
+  loadSessionData(): any{
     var sessionStr = this.localStorageService.getItem('currentUser');
-    return (sessionStr) ? <Session> JSON.parse(sessionStr) : null;
+    return (sessionStr) ? <any> JSON.parse(sessionStr) : null;
   }
 
-  getCurrentSession(): Session {
-    return this.currentSession;
+  getCurrentSession(): any {
+    
+    return this.some;
   }
 
   removeCurrentSession(): void {
@@ -36,18 +39,22 @@ export class StorageService {
     this.currentSession = null;
   }
 
-  getCurrentUser(): User {
-    var session: Session = this.getCurrentSession();
-    return (session && session.user) ? session.user : null;
-  };
-
   isAuthenticated(): boolean {
-    return (this.getCurrentToken() == null) ? true : false;
+    return (this.getCurrentToken() != null) ? true : false;
   };
 
   getCurrentToken(): string {
+    try{
     var session = this.getCurrentSession();
-    return (session && session.token) ? session.token : null;
+
+    if (session.some!="thissecret"){
+      return null;
+    }else{
+      return session;
+    }
+  }catch{
+    return null;
+  }
   };
 
   logout(): void{
