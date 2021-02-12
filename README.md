@@ -46,6 +46,7 @@
 **(run the commands in pwd /Frond_End y pwd /Back_End)**
 
 #TEST API REST
+
 **authentication**
 	
 	POST http://127.0.0.1:5000/api/auth
