@@ -26,7 +26,8 @@ def add_user():
 			cursor = conn.cursor()
 			cursor.execute(sql, data)
 			conn.commit()
-			resp = jsonify('User added successfully!')
+			notify = {'notify': 'User added successfully!'}
+			resp = jsonify(notify)
 			resp.status_code = 200
 			return resp
 		else:
@@ -155,10 +156,11 @@ def update_user():
 				_name = _json['name']
 				_email = _json['email']
 				_password = _json['pwd']
-				if _name and _email and _password and _id and request.method == 'PATCH':
+				_fullname = _json['fullname']
+				if _name and _email and _password and _fullname and _id and request.method == 'PATCH':
 					_hashed_password = generate_password_hash(_password)
-					sql = "UPDATE tbl_user SET user_name=%s, user_email=%s, user_password=%s WHERE user_id=%s"
-					data = (_name, _email, _hashed_password, _id,)
+					sql = "UPDATE tbl_user SET user_name=%s, user_email=%s, user_password=%s, user_fullname=%s WHERE user_id=%s"
+					data = (_name, _email, _hashed_password,_fullname, _id)
 					conn = mysql.connect()
 					cursor = conn.cursor()
 					cursor.execute(sql, data)
@@ -185,19 +187,32 @@ def update_user():
 @app.route('/api/delete/<int:id>', methods=['DELETE'])
 def delete_user(id):
 	try:
-		conn = mysql.connect()
-		cursor = conn.cursor()
-		cursor.execute("DELETE FROM tbl_user WHERE user_id=%s", (id,))
-		conn.commit()
-		resp = jsonify('User deleted successfully!')
-		resp.status_code = 200
+		_json = request.json
+		_jwt_token = _json['jwt_token']
+		_check = {'some': 'thissecret'}
+		if _check ==jwt.decode(_jwt_token, "secret", algorithms=["HS256"]):
+			try:
+				conn = mysql.connect()
+				cursor = conn.cursor()
+				cursor.execute("DELETE FROM tbl_user WHERE user_id=%s", (id,))
+				conn.commit()
+				notify = {'notify': 'User deleted successfully!'}
+				resp = jsonify(notify)
+				resp.status_code = 200
+				return resp
+			except Exception as e:
+				print(e)
+			finally:
+				cursor.close()
+				conn.close()
+		else:
+			notify = {'notify': 'Error token'}
+			resp = jsonify(notify)
+			return resp
+	except Exception:
+		notify = {'notify': 'Error token'}
+		resp = jsonify(notify)
 		return resp
-	except Exception as e:
-		print(e)
-	finally:
-		cursor.close()
-		conn.close()
-
 @app.errorhandler(404)
 def not_found(error=None):
     message = {
